@@ -23,7 +23,6 @@ log = logging.getLogger("multivisor")
 
 
 class Supervisor(dict):
-
     Null = {
         "identification": None,
         "api_version": None,
@@ -227,7 +226,6 @@ class Supervisor(dict):
 
 
 class Process(dict):
-
     Null = {"running": False, "pid": None, "state": None, "statename": "UNKNOWN"}
 
     def __init__(self, supervisor, *args, **kwargs):
@@ -239,7 +237,7 @@ class Process(dict):
         full_name = self.get("group", "") + ":" + self.get("name", "")
         uid = "{}:{}".format(supervisor_name, full_name)
         self.log = log.getChild(uid)
-        self.supervisor = weakref.proxy(supervisor)
+        self.supervisor: Supervisor = weakref.proxy(supervisor)
         self["full_name"] = full_name
         self["running"] = self["state"] in RUNNING_STATES
         self["supervisor"] = supervisor_name
@@ -408,7 +406,7 @@ class Multivisor(object):
         return self.config
 
     @property
-    def supervisors(self):
+    def supervisors(self) -> dict[str, Supervisor]:
         return self.config["supervisors"]
 
     @property
@@ -433,7 +431,7 @@ class Multivisor(object):
         tasks = [spawn(supervisor.refresh) for supervisor in self.supervisors.values()]
         joinall(tasks)
 
-    def get_supervisor(self, name):
+    def get_supervisor(self, name) -> Supervisor:
         return self.supervisors[name]
 
     def get_process(self, uid):

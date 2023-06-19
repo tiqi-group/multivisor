@@ -27,8 +27,11 @@ from supervisor.events import subscribe, Event, getEventNameByType
 # unsubscribe only appears in supervisor > 3.3.4
 try:
     from supervisor.events import unsubscribe
-except:
-    unsubscribe = lambda x, y: None
+except Exception:
+
+    def unsubscribe(x, y):
+        return
+
 
 from .util import sanitize_url, parse_obj
 
@@ -117,14 +120,14 @@ class MultivisorNamespaceRPCInterface(SupervisorNamespaceRPCInterface):
         payload = dict((x.split(":") for x in payload_str.split()))
         if event_name.startswith("PROCESS_STATE"):
             pname = "{}:{}".format(payload["groupname"], payload["processname"])
-            payload[u"process"] = parse_obj(self.getProcessInfo(pname))
+            payload["process"] = parse_obj(self.getProcessInfo(pname))
         # broadcast the event to clients
         server = self.supervisord.options.identifier
         new_event = {
-            u"pool": u"multivisor",
-            u"server": text_type(server),
-            u"eventname": text_type(event_name),
-            u"payload": payload,
+            "pool": "multivisor",
+            "server": text_type(server),
+            "eventname": text_type(event_name),
+            "payload": payload,
         }
         for channel in self._event_channels:
             channel.put(new_event)
@@ -170,7 +173,7 @@ class MultivisorNamespaceRPCInterface(SupervisorNamespaceRPCInterface):
                     return
                 # self._log.info(event)
                 yield event
-        except LostRemote as e:
+        except LostRemote:
             self._log.info("remote end of stream disconnected")
         finally:
             self._event_channels.remove(channel)

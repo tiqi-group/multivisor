@@ -1,11 +1,8 @@
-import hashlib
 import functools
 
-import gevent
 from blinker import signal
 from gevent.monkey import patch_all
 
-patch_all(thread=False)
 
 import os
 import logging
@@ -21,6 +18,7 @@ from multivisor.util import sanitize_url
 from multivisor.multivisor import Multivisor
 from .util import is_login_valid, login_required
 
+patch_all(thread=False)
 
 log = logging.getLogger("multivisor")
 
@@ -144,13 +142,13 @@ def process_log_tail(stream, uid):
         tail = server.tailProcessStderrLog
 
     def event_stream():
-        i, offset, length = 0, 0, 2 ** 12
+        i, offset, length = 0, 0, 2**12
         while True:
             data = tail(pname, offset, length)
             log, offset, overflow = data
             # don't care about overflow in first log message
             if overflow and i:
-                length = min(length * 2, 2 ** 14)
+                length = min(length * 2, 2**14)
             else:
                 data = json.dumps(dict(message=log, size=offset))
                 yield "data: {}\n\n".format(data)
