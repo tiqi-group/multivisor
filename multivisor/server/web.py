@@ -22,7 +22,32 @@ patch_all(thread=False)
 
 log = logging.getLogger("multivisor")
 
-app = Flask(__name__, static_folder="./dist/static", template_folder="./dist")
+
+class Dispatcher(object):
+    def __init__(self):
+        self.clients = []
+        for signal_name in SIGNALS:
+            signal(signal_name).connect(self.on_multivisor_event)
+
+    def add_listener(self, client):
+        self.clients.append(client)
+
+    def remove_listener(self, client):
+        self.clients.remove(client)
+
+    def on_multivisor_event(self, signal, payload):
+        data = json.dumps(dict(payload=payload, event=signal))
+        event = f"data: {data}\n\n"
+        for client in self.clients:
+            client.put(event)
+
+
+class ExtendedFlask(Flask):
+    multivisor: Multivisor
+    dispatcher: Dispatcher
+
+
+app = ExtendedFlask(__name__, static_folder="./dist/static", template_folder="./dist")
 
 
 @app.route("/api/admin/reload")
@@ -204,25 +229,6 @@ def stream():
 @app.route("/<path:path>")
 def catch_all(path):
     return render_template("index.html")
-
-
-class Dispatcher(object):
-    def __init__(self):
-        self.clients = []
-        for signal_name in SIGNALS:
-            signal(signal_name).connect(self.on_multivisor_event)
-
-    def add_listener(self, client):
-        self.clients.append(client)
-
-    def remove_listener(self, client):
-        self.clients.remove(client)
-
-    def on_multivisor_event(self, signal, payload):
-        data = json.dumps(dict(payload=payload, event=signal))
-        event = "data: {0}\n\n".format(data)
-        for client in self.clients:
-            client.put(event)
 
 
 def set_secret_key():
