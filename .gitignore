@@ -12,3 +12,5 @@ npm-debug.log*
 *.pid
 .idea/
 .env
+.venv
+.mypy_cache
