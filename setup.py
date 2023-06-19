@@ -6,7 +6,7 @@ supervisor = "supervisor-win" if platform.system() == "Windows" else "supervisor
 
 extras = {
     "rpc": ["zerorpc", supervisor],
-    "web": ["flask", "werkzeug", "blinker", "zerorpc", supervisor],
+    "web": ["flask", "werkzeug==2.0.1", "blinker", "zerorpc", supervisor],
     "cli": ["maya", "requests", "prompt_toolkit>=2", "blinker"],
 }
 
@@ -33,7 +33,7 @@ setup(
         console_scripts=[
             "multivisor=multivisor.server.web:main [web]",
             "multivisor-rpc=multivisor.server.rpc:main [rpc]",
-            "multivisor-cli=multivisor.client.cli:main [cli]"
+            "multivisor-cli=multivisor.client.cli:main [cli]",
         ]
     ),
     extras_require=extras,
