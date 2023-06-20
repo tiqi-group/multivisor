@@ -1209,4 +1209,4 @@ web = ["flask", "werkzeug", "blinker", "zerorpc", "supervisor-win", "supervisor"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "6d59cb8ad1285f94d2135a767607d2ab3daff8b9d1eea5cd750a584b04bb7253"
+content-hash = "ed1f7c56ecd66534f651295aa3045f6df94ab22dd28ba3d64b38a54bdc6c5a31"
