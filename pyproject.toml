@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "multivisor"
+version = "7.0.0"
+description = "A centralized supervisor UI (web & CLI)"
+authors = ["Tiago Coutinho <coutinhotiago@gmail.com>"]
+license = "GNU General Public License v3"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+six = "*"
+gevent = ">=1.3"
+supervisor-win = { version = "*", optional = true, platform = "windows" }
+supervisor = { version = "*", optional = true, platform = "linux" }
+zerorpc = { version = "*", optional = true }
+flask = { version = "*", optional = true }
+werkzeug = { version = "2.0.1", optional = true }
+blinker = { version = "*", optional = true }
+maya = { version = "*", optional = true }
+requests = { version = "*", optional = true }
+prompt_toolkit = { version = ">=2", optional = true }
+
+[tool.poetry.dev-dependencies]
+
+[tool.poetry.extras]
+rpc = ["zerorpc", "supervisor-win", "supervisor"]
+web = ["flask", "werkzeug", "blinker", "zerorpc", "supervisor-win", "supervisor"]
+cli = ["maya", "requests", "prompt_toolkit", "blinker"]
+
+[tool.poetry.scripts]
+multivisor = "multivisor.server.web:main"
+multivisor-rpc = "multivisor.server.rpc:main"
+multivisor-cli = "multivisor.client.cli:main"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
