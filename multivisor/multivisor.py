@@ -10,7 +10,7 @@ from blinker import signal
 try:
     from ConfigParser import SafeConfigParser
 except ImportError:
-    from configparser import SafeConfigParser
+    from configparser import RawConfigParser as SafeConfigParser
 
 import zerorpc
 from gevent import spawn, sleep, joinall

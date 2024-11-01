@@ -9,7 +9,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.9"
 six = "*"
-gevent = ">=1.3"
+gevent = ">=24"
 supervisor-win = {git = "https://github.com/tiqi-group/supervisor-win.git", optional = true, markers = "platform_system == \"Windows\"" }
 supervisor = { version = "*", optional = true, markers = "platform_system == \"Linux\"" }
 zerorpc = { version = "*", optional = true }
@@ -19,6 +19,7 @@ blinker = { version = "*", optional = true }
 maya = { version = "*", optional = true }
 requests = { version = "*", optional = true }
 prompt_toolkit = { version = ">=2", optional = true }
+configparser = "^7.1.0"
 
 [tool.poetry.dev-dependencies]
 
